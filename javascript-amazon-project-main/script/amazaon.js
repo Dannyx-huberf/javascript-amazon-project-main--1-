@@ -83,6 +83,16 @@ addToCartButton.forEach((button)=>{
     }else{
       matchingItem.quantity+=1;
     }
+
+    // updating the amazon cart quantity display
+    let cartQuantity = 0;
+
+    cart.forEach((cartItem)=>{
+      cartQuantity += cartItem.quantity;
+    });
+
+    const amazonCartQuantity = document.querySelector('.js-cart-quantity');
+    amazonCartQuantity.innerHTML = cartQuantity;
   });
   
 });
