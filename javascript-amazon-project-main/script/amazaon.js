@@ -1,4 +1,5 @@
 import { cart } from "../data/cart.js";
+import { products } from "../data/products.js";
 // looping through our product object in the products array
 let productHtml = '';
 products.forEach((product)=>{
