@@ -64,37 +64,49 @@ productGridContainer.innerHTML = productHtml;
 //by looping through all add to cart button
 const addToCartButton=document.querySelectorAll('.js-add-to-cart');
 
-addToCartButton.forEach((button)=>{
-  button.addEventListener('click',()=>{
-    //store the data attribute for the add to cart button
+addToCartButton.forEach((button) => {
+  button.addEventListener('click', () => {
     const productId = button.dataset.productId;
-    console.log(productId);
-
-
-    //create a matching item container that finds and stores a product id in the cart
+    
+    // Find the closest product container (to locate its quantity dropdown)
+    const productContainer = button.closest('.product-container');
+    
+    // Get the selected quantity from the dropdown
+    const quantitySelect = productContainer.querySelector('select');
+    const selectedQuantity = parseInt(quantitySelect.value, 10); // Convert to number
+    
+    // Check if item already exists in cart
     let matchingItem = cart.find(item => item.productId === productId);
-
-    //if the items match increase the quantity if not add a new cart
-    if(!matchingItem){
+    
+    if (!matchingItem) {
+      // Add new item with selected quantity
       cart.push({
-        productId:productId,
-        quantity:1
+        productId: productId,
+        quantity: selectedQuantity
       });
-    }else{
-      matchingItem.quantity+=1;
+    } else {
+      // Update existing item's quantity (add selected quantity)
+      matchingItem.quantity += selectedQuantity;
     }
+    
+    // Update the cart total display
+    updateCartQuantity();
+    
+    console.log('Cart:', cart);
+  });
+});
 
-    // updating the amazon cart quantity display
-    let cartQuantity = 0;
-
-    cart.forEach((cartItem)=>{
-      cartQuantity += cartItem.quantity;
-    });
-
-    const amazonCartQuantity = document.querySelector('.js-cart-quantity');
-    amazonCartQuantity.innerHTML = cartQuantity;
+// Helper function to update cart quantity display
+function updateCartQuantity() {
+  let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
   });
   
-});
+  const amazonCartQuantity = document.querySelector('.js-cart-quantity');
+  if (amazonCartQuantity) {
+    amazonCartQuantity.textContent = cartQuantity;
+  }
+}
 
 
