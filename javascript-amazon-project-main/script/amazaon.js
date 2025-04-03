@@ -1,5 +1,6 @@
-import { cart } from "../data/cart.js";
+import { cart,addtoCart,updateCartQuantity,confirmationMsg} from "../data/cart.js";
 import { products } from "../data/products.js";
+
 // looping through our product object in the products array
 let productHtml = '';
 products.forEach((product)=>{
@@ -24,11 +25,11 @@ products.forEach((product)=>{
           </div>
 
           <div class="product-price">
-            $${product.priceCents / 100}
+            $${(product.priceCents / 100).toFixed(2)}
           </div>
 
           <div class="product-quantity-container">
-            <select>
+            <select class="js-select-container">
               <option selected value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -44,7 +45,7 @@ products.forEach((product)=>{
 
           <div class="product-spacer"></div>
 
-          <div class="added-to-cart">
+          <div class="added-to-cart js-added-to-cart">
             <img src="images/icons/checkmark.png">
             Added
           </div>
@@ -72,52 +73,11 @@ addToCartButton.forEach((button) => {
     
     // Find the closest product container (to locate its quantity dropdown)
     const productContainer = button.closest('.product-container');
-    
-    // Get the selected quantity from the dropdown
-    const quantitySelect = productContainer.querySelector('select');
-    const selectedQuantity = parseInt(quantitySelect.value, 10); // Convert to number
-    
-    // Check if item already exists in cart
-    let matchingItem = cart.find(item => item.productId === productId);
-    
-    if (!matchingItem) {
-      // Add new item with selected quantity
-      cart.push({
-        productId: productId,
-        quantity: selectedQuantity
-      });
-    } else {
-      // Update existing item's quantity (add selected quantity)
-      matchingItem.quantity += selectedQuantity;
-    }
-
-    //display the confirmation message by dynamically adding a new class to the add to cart class
-    const displayAddMessage = productContainer.querySelector('.added-to-cart');
-
-    displayAddMessage.classList.add('added-to-cart-opacity');
-
-    setTimeout(()=>{
-      displayAddMessage.classList.remove('added-to-cart-opacity');
-    },2000);
-    
-    // Update the cart total display
+  
+    addtoCart(productId,productContainer);
+    confirmationMsg(productContainer);
     updateCartQuantity();
     
-    console.log('Cart:', cart);
   });
 });
-
-// Helper function to update cart quantity display
-function updateCartQuantity() {
-  let cartQuantity = 0;
-  cart.forEach((cartItem) => {
-    cartQuantity += cartItem.quantity;
-  });
-  
-  const amazonCartQuantity = document.querySelector('.js-cart-quantity');
-  if (amazonCartQuantity) {
-    amazonCartQuantity.textContent = cartQuantity;
-  }
-}
-
 
