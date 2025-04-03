@@ -2,7 +2,7 @@
 let productHtml = '';
 products.forEach((product)=>{
   //generating the html for our products dynamically 
-  productHtml += `
+  productHtml += ` 
    <div class="product-container">
           <div class="product-image-container">
             <img class="product-image"
@@ -46,16 +46,45 @@ products.forEach((product)=>{
             <img src="images/icons/checkmark.png">
             Added
           </div>
-
-          <button class="add-to-cart-button button-primary">
+          <!--add a data attribute to the add to cart btn-->
+          <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id = ${product.id}>
             Add to Cart
           </button>
         </div>
   `;
 });
-console.log(productHtml);
+// console.log(productHtml);
 
 //placing the generated html into our html file using the dom
 const productGridContainer = document.querySelector('.js-products-grid');
 
 productGridContainer.innerHTML = productHtml;
+
+//Functionalize the add to cart Button
+//by looping through all add to cart button
+const addToCartButton=document.querySelectorAll('.js-add-to-cart');
+
+addToCartButton.forEach((button)=>{
+  button.addEventListener('click',()=>{
+    //store the data attribute for the add to cart button
+    const productId = button.dataset.productId;
+    console.log(productId);
+
+
+    //create a matching item container that finds and stores a product id in the cart
+    let matchingItem = cart.find(item => item.productId === productId);
+
+    //if the items match increase the quantity if not add a new cart
+    if(!matchingItem){
+      cart.push({
+        productId:productId,
+        quantity:1
+      });
+    }else{
+      matchingItem.quantity+=1;
+    }
+  });
+  
+});
+
+
