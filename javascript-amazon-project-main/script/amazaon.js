@@ -88,6 +88,15 @@ addToCartButton.forEach((button) => {
       // Update existing item's quantity (add selected quantity)
       matchingItem.quantity += selectedQuantity;
     }
+
+    //display the confirmation message by dynamically adding a new class to the add to cart class
+    const displayAddMessage = productContainer.querySelector('.added-to-cart');
+
+    displayAddMessage.classList.add('added-to-cart-opacity');
+
+    setTimeout(()=>{
+      displayAddMessage.classList.remove('added-to-cart-opacity');
+    },2000);
     
     // Update the cart total display
     updateCartQuantity();
