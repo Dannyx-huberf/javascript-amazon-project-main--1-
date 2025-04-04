@@ -1,4 +1,7 @@
-export let cart = [
+export let cart = JSON.parse(localStorage.getItem('cart'));
+  
+  if(!cart){
+   cart =  [
   {
     productId:'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
     quantity:2
@@ -8,7 +11,11 @@ export let cart = [
     quantity:1
   }
 ];
+}
 
+function saveCartToLocalStorage() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
 export function addtoCart(productId,productContainer){
   // Get the selected quantity from the dropdown
   const quantitySelect = productContainer.querySelector('select');
@@ -27,6 +34,7 @@ export function addtoCart(productId,productContainer){
     // Update existing item's quantity (add selected quantity)
     matchingItem.quantity += selectedQuantity;
   }
+  saveCartToLocalStorage();
 }
 
 export function updateCartQuantity() {
@@ -57,4 +65,5 @@ export function removeFromCart(productId) {
   const newcart = cart.filter(item => item.productId !== productId);
 
   cart = newcart;
+  saveCartToLocalStorage();
 }
