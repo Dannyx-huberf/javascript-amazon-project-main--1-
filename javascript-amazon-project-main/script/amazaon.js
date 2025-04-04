@@ -1,4 +1,4 @@
-import { cart,addtoCart,updateCartQuantity,confirmationMsg} from "../data/cart.js";
+import { cart,addtoCart,calculateCartItemQuantity,confirmationMsg} from "../data/cart.js";
 import { products } from "../data/products.js";
 
 // looping through our product object in the products array
@@ -76,7 +76,7 @@ addToCartButton.forEach((button) => {
   
     addtoCart(productId,productContainer);
     confirmationMsg(productContainer);
-    updateCartQuantity();
+    calculateCartItemQuantity();
     
   });
 });
