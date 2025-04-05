@@ -2,14 +2,12 @@
   import { products } from '../data/products.js';
   import { formatCurrency } from "./utils/money.js";
   import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
+
   calculateCartItemQuantity();
 
   import { deliveryOptions } from './deliveryOption.js';
 
-  const today = dayjs();
-  const deliveryDate = today.add(5, 'day');
-  const formattedDate = deliveryDate.format('dddd, MMMM D');
-  console.log(formattedDate);
+  function renderOrderSummary(){
   let cartSummaryHtml = '';
   cart.forEach(cartItem=>{
     const productId = cartItem.productId;
@@ -137,6 +135,7 @@
       const productId = option.dataset.productId;
       const deliveryOptionId = option.dataset.deliveryOptionId;
       updateDeliveryOption(productId,deliveryOptionId);
+      renderOrderSummary();
     });
   });
 
@@ -183,3 +182,5 @@
       }
     });
   });
+}
+renderOrderSummary();
