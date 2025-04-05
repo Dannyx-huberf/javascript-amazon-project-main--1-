@@ -2,8 +2,9 @@ import {cart,removeFromCart,calculateCartItemQuantity,updateQuantity,updateDeliv
 import { products } from '../../data/products.js';
 import { formatCurrency } from "../utils/money.js";
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
-import { deliveryOptions } from '../deliveryOption.js';
+import { deliveryOptions,calclateDeliveryDate} from '../deliveryOption.js';
 import { renderPaymentSummary } from './paymentSummary.js';
+import { renderCheckoutHeader } from './checkoutHeader.js';
 
 calculateCartItemQuantity();
 
@@ -17,18 +18,12 @@ cart.forEach(cartItem=>{
 let matchingProduct = products.find(product => product.id == productId);
 
 const deliveryOptionId = cartItem.deliveryOptionId;
-let deliveryOption = deliveryOptions.find(option => option.id == deliveryOptionId);
-
-const todayDate = dayjs();
-  const DeliveryDate = todayDate.add(deliveryOption.deliveryDays, 'day');
-  const formattedDate = DeliveryDate.format('dddd, MMMM D');
-
 
   cartSummaryHtml += `
       <div class="cart-item-container 
       js-cart-item-container-${matchingProduct.id} ">
         <div class="delivery-date">
-          Delivery date: ${formattedDate}
+          Delivery date: ${calclateDeliveryDate(deliveryOptionId)}
         </div>
 
         <div class="cart-item-details-grid">
@@ -81,9 +76,6 @@ function handleDeleveryOption(matchingProduct,cartItem){
   let html = '';
   deliveryOptions.forEach((deliveryOption)=>{
 
-    const todayDate = dayjs();
-    const DeliveryDate = todayDate.add(deliveryOption.deliveryDays, 'day');
-    const formattedDate = DeliveryDate.format('dddd, MMMM D');
     const price = deliveryOption.priceCents === 0 ? 'FREE Shipping' : `$${formatCurrency(deliveryOption.priceCents)}`;
 
     const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
@@ -98,7 +90,7 @@ function handleDeleveryOption(matchingProduct,cartItem){
           name="delivery-option-${matchingProduct.id}">
         <div>
           <div class="delivery-option-date">
-            ${formattedDate}
+            ${calclateDeliveryDate(deliveryOption.id)}
           </div>
           <div class="delivery-option-price">
             ${price}
@@ -152,6 +144,7 @@ document.querySelectorAll('.js-delete-link').forEach(link=>{
     cartItemContainer.remove();
     calculateCartItemQuantity();
     renderPaymentSummary();
+    renderCheckoutHeader();
   });
 });
 
@@ -170,6 +163,9 @@ document.querySelectorAll('.js-save-link').forEach(link=>{
   link.addEventListener('click',event=>{
     const productId = link.dataset.productId;
   handleSave(productId);
+    renderOrderSummary();
+    renderPaymentSummary();
+    renderCheckoutHeader();
   });
 });
 /// Add keydown event listener for the "Save" link to handle Enter key press

@@ -11,16 +11,17 @@ export function renderPaymentSummary() {
   let matchingProduct = products.find(product => product.id == cartItem.productId);
   productCent += matchingProduct.priceCents * cartItem.quantity;
 
-  let deliveryOption = deliveryOptions.find(option => option.id == cartItem.deliveryOptionId)  || 0;
+  let deliveryOption = deliveryOptions.find(option => option.id == cartItem.deliveryOptionId);
   shippingCent += deliveryOption.priceCents * cartItem.quantity;
 });
 
+
   const totalPriceBeforeTax = productCent + shippingCent;
-  console.log('Total price before tax:', totalPriceBeforeTax);
+ 
   const taxCents = totalPriceBeforeTax * 0.1; 
-  console.log('total price with tax:', taxCents);
+
   const totalPrice = totalPriceBeforeTax + taxCents;
-  console.log('Total price:', totalPrice);
+
 
   const paymentSummaryHtml = 
   `
@@ -29,7 +30,7 @@ export function renderPaymentSummary() {
           </div>
 
           <div class="payment-summary-row">
-            <div>Items (3):</div>
+            <div class="js-payment-summary-quantity">${paymentSummaryQuantity}):</div>
             <div class="payment-summary-money">
               $${formatCurrency(productCent)}
             </div>
@@ -68,4 +69,15 @@ export function renderPaymentSummary() {
           </button>
           `;
   document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHtml;
+  function paymentSummaryQuantity() {
+    let cartQuantity = 0;
+    cart.forEach((cartItem) => {
+      cartQuantity += cartItem.quantity;
+    });
+    const paymentSummaryQuantity = document.querySelector('.js-payment-summary-quantity');
+    if (paymentSummaryQuantity) {
+      paymentSummaryQuantity.textContent = 'Items : ('+cartQuantity+') items';
+    }
+  }
+  paymentSummaryQuantity();
 }
