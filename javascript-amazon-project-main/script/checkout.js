@@ -1,4 +1,4 @@
-  import {cart,removeFromCart,calculateCartItemQuantity,updateQuantity} from '../data/cart.js'
+  import {cart,removeFromCart,calculateCartItemQuantity,updateQuantity,updateDeliveryOption} from '../data/cart.js'
   import { products } from '../data/products.js';
   import { formatCurrency } from "./utils/money.js";
   import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
@@ -90,7 +90,9 @@
       const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
 
     html += `
-      <div class="delivery-option">
+      <div class="delivery-option js-delivery-option"
+      data-product-id="${matchingProduct.id}"
+      data-delivery-option-id="${deliveryOption.id}">
           <input type="radio"
           ${isChecked ? 'checked' : ''}
             class="delivery-option-input"
@@ -128,6 +130,15 @@
     quantityLabel.textContent = quantityValue;
     calculateCartItemQuantity();
   }
+
+  // update the delivery option when the user selects a different delivery option
+  document.querySelectorAll('.js-delivery-option').forEach(option=>{
+    option.addEventListener('click',event=>{
+      const productId = option.dataset.productId;
+      const deliveryOptionId = option.dataset.deliveryOptionId;
+      updateDeliveryOption(productId,deliveryOptionId);
+    });
+  });
 
   //loops through all the delete links and adds an event listener to each of them
 
